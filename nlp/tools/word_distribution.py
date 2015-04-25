@@ -5,10 +5,11 @@ from math import log
 
 
 class WordDistribution(object):
-    def __init__(self, tf=[], df=defaultdict(int)):
-        self.tf = tf
-        self.df = df
+    def __init__(self):
+        self.tf = []
+        self.df = defaultdict(int)
         self.tf_idf = []
+        self.total_words_dist = defaultdict(int)
 
     def update_dist(self, doc):
         self.update_tf(doc)
@@ -26,23 +27,60 @@ class WordDistribution(object):
 
     def calc_tfidf(self, docs):
         N = len(docs)
+        if len(docs) != len(self.tf):
+            print "number of docs is different from the calculated term frequency"
+            return False
         for doc, tf in zip(docs, self.tf):
             doc_tf_idf = {}
             for word in set(doc):
                 doc_tf_idf[word] = tf[word] * log(float(N)/self.df[word])
             self.tf_idf.append(doc_tf_idf)
+        return True
 
-    def get_words_count_dist(self):
-        word_counts = defaultdict(int)
+    def calc_total_words_dist(self):
         for tf in self.tf:
             for word in tf:
-                word_counts[word] += 1
-        return word_counts
+                self.total_words_dist[word] += 1
 
-    def show_result(self):
-        totla_word_dist = self.get_words_count_dist()
+    def extract_top_n_percent_words(self, n=1):
+        """
+        出現頻度が上位nパーセントの単語を計算済みの単語分布から削除する
+        :param n:
+        :return:
+        """
+        percentage = float(n)/100
+        remove_word_count = int(percentage * self.total_words_count)
+        sorted_words_dist = sorted(self.total_words_dist.items(), key=lambda x: x[1], reverse=True)
+        remove_words = []
+        for word, count in sorted_words_dist:
+            if count > remove_word_count:
+                remove_words.append(word)
+            else:
+                break
+        return remove_words
+
+    def remove_words(self, words):
+        for word in words:
+            if word not in self.df:
+                continue
+            del self.total_words_dist[word]
+            del self.df[word]
+            for doc_i in xrange(len(self.tf)):
+                if word not in self.tf[doc_i]:
+                    continue
+                del self.tf[doc_i][word]
+
+    @property
+    def total_words_count(self):
+        return sum(self.total_words_dist.values())
+
+    def show_result(self, remove_stopword=False):
         print "==== total word counts ===="
-        for word, count in sorted(totla_word_dist.items(), key=lambda x: x[1], reverse=True)[:20]:
+        if remove_stopword:
+            tf = self.remove_top_n_percent_words()
+        else:
+            tf = self.total_words_dist
+        for word, count in tf:
             print "{}: {}".format(word.encode('utf-8'), count)
 
 if __name__ == '__main__':
