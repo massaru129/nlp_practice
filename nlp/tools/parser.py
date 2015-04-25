@@ -5,9 +5,6 @@ __author__ = 'masaru'
 import unicodedata
 import igo
 
-import os
-print os.path.dirname(__file__)
-
 tagger = igo.tagger.Tagger('dict/neologd')
 
 
