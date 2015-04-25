@@ -12,7 +12,7 @@ def mery_crawler():
                          'content': ['.articleArea p.article_text', '.articleArea p.article_image_desc', '.articleArea h2.article_headline'],
                          'pv': ['li.view span'],
                          'keywords': ['li.tag a'],
-                         'category': ['ul.topBar_in li a span']},
+                         'category': ['ul.topBar_in li a span:nth-of-type(2)']},
              'links': 'h3.article_list_title a'}
     for category in categories[:1]:
         category_root_url = '/'.join([root_url, category])

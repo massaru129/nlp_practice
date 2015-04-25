@@ -47,7 +47,7 @@ class BaseCrawler():
         for item, item_rules in self.rules['article'].items():
             for rule in item_rules:
                 try:
-                    article[item].extend([elem.text.strip() for elem in soup.select(rule)])
+                    article[item] = ''.join([elem.text.strip() for elem in soup.select(rule)])
                 except IndexError:
                     continue
         return article
