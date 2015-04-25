@@ -9,8 +9,9 @@ tagger = igo.tagger.Tagger('dict/neologd')
 
 
 class SentenceParser():
+    tagger = tagger
+
     def __init__(self, sentence):
-        self.tagger = tagger
         self.nodes = None
         # if not isinstance(sentence, unicode):
         #     sentence = sentence.decode('utf-8')
@@ -31,7 +32,6 @@ class SentenceParser():
             self.parse()
         nouns = []
         for node in self.nodes:
-            if node.feature.split(',')[0] == u'名詞':
+            if node.feature.split(',')[0] == u'名詞' and len(node.surface) > 1:
                 nouns.append(node.surface)
         return nouns
-
