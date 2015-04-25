@@ -1,0 +1,13 @@
+beautifulsoup4==4.3.2
+charade==1.0.3
+cssselect==0.9.1
+gnureadline==6.3.3
+igo-python==0.9.3
+ipython==3.1.0
+lxml==3.4.3
+nltk==3.0.2
+Pillow==2.8.1
+pyaml==15.3.1
+pymongo==3.0
+PyYAML==3.11
+requests==2.6.0
